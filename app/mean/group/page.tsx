@@ -1,5 +1,8 @@
 "use client";
 
+import RangeTable from "@/components/range-table";
+import ResultTable from "@/components/result-table";
+import SimpleTable from "@/components/simple-table";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,17 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { getMeanGroup } from "@/lib/grouped";
+import { getMeanGroup, getMeanGroupRange } from "@/lib/grouped";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -36,6 +31,7 @@ const valuesData = ["Mean", "x_mean", "f_mean", "xf_mean"];
 
 const GroupMean = () => {
   const [data, setData] = useState<number[]>([]);
+  const [result, setResult] = useState<number[][]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,14 +43,24 @@ const GroupMean = () => {
   });
 
   const [dataRow, setDataRow] = useState<number[][]>([]);
+  const [range, setRange] = useState(0);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    setRange(0);
     setDataRow([]);
-    console.log(values.dataCount);
     if (!values.ranged) {
       let temp: number[][] = [];
       for (let i = 0; i < Number.parseInt(values.dataCount); i++) {
         temp.push([0, 0]);
+      }
+      setDataRow(temp);
+    } else {
+      let temp: number[][] = [];
+      setRange(Number.parseInt(values.range));
+      let start = 0;
+      for (let i = 0; i < Number.parseInt(values.dataCount); i++) {
+        temp.push([start, start + Number.parseInt(values.range), 0]);
+        start += Number.parseInt(values.range);
       }
       setDataRow(temp);
     }
@@ -65,11 +71,22 @@ const GroupMean = () => {
     row: number,
     col: number
   ) => {
-    if (e) {
+    if (e && range !== 0) {
       setDataRow((data) => {
+        let change = false;
+        let start = 0;
         return data.map((val, i) => {
           if (i === row) {
             val[col] = Number.parseInt(e.target.value);
+            if (col === 0) {
+              val[1] = Number.parseInt(e.target.value) + range;
+              start = val[1];
+              change = true;
+            }
+          } else if (change) {
+            val[0] = start;
+            val[1] = val[0] + range;
+            start += range;
           }
           return val;
         });
@@ -78,13 +95,26 @@ const GroupMean = () => {
   };
 
   const calculate = () => {
-    const ans = getMeanGroup(dataRow);
-    setData([ans.mean, ans.x_sum, ans.f_sum, ans.xf_sum]);
+    const ans = getMeanGroupRange(dataRow);
+    setData(ans);
+    setResult(() => {
+      return dataRow.map((e) => {
+        return [
+          ...e,
+          (e[0] + e[1]) / 2,
+          ((e[0] + e[1]) / 2) * e[2],
+          Math.pow((e[0] + e[1]) / 2, 2) * e[2],
+          (e[0] + e[1]) / 2 - ans[0],
+        ];
+      });
+    });
   };
 
   return (
     <div className="h-full w-full flex flex-col p-5 gap-5 overflow-auto">
-      <h1 className="text-xl text-muted-foreground">Find the Mean</h1>
+      <h1 className="text-xl text-muted-foreground">
+        Find the Mean,Median, Mode
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -144,57 +174,24 @@ const GroupMean = () => {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-      {dataRow && dataRow.length !== 0 && (
-        <div className="flex flex-col gap-5">
-          <h1 className=" text-muted-foreground text-md">
-            Fill the table below
-          </h1>
-          <Table className=" border-2">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Class</TableHead>
-                <TableHead>Frequency</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {dataRow.map((e, index) => (
-                <TableRow key={`keypair${index}`}>
-                  <TableCell>
-                    <Input
-                      value={e[0]}
-                      type="number"
-                      onChange={(e) => onChange(e, index, 0)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={e[1]}
-                      onChange={(e) => onChange(e, index, 1)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <Button onClick={calculate}>Calculate</Button>
-        </div>
+      {dataRow.length !== 0 && range === 0 && (
+        <SimpleTable
+          dataRow={dataRow}
+          onChange={onChange}
+          calculate={calculate}
+          label="Fill Completely"
+        />
       )}
-      {data.length !== 0 && (
-        <div className="w-full p-5">
-          <Table>
-            <TableBody>
-              {valuesData.map((e, index) => (
-                <TableRow key={e}>
-                  <TableCell>{e}</TableCell>
-                  <TableCell>
-                    {data.length - 1 >= index && data[index]}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+      {dataRow.length !== 0 && range !== 0 && (
+        <RangeTable
+          dataRow={dataRow}
+          onChange={onChange}
+          calculate={calculate}
+          label="Fill Completely"
+        />
+      )}
+      {result.length !== 0 && (
+        <ResultTable data={data} result={result} isRange={range === 0} />
       )}
     </div>
   );

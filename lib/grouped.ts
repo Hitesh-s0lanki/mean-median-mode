@@ -19,6 +19,37 @@ export const getMeanGroup = (arr: number[][]) => {
     }
 }
 
+export const getMeanGroupRange = (arr: number[][]) => {
+    let x_sum = 0;
+    let f_sum = 0;
+    let cf_sum = 0;
+    let xf_sum = 0;
+    let fx2_sum = 0;
+
+    // for Mean
+    for (let num of arr) {
+        x_sum += (num[0] + num[1]) / 2
+        f_sum += num[2]
+        xf_sum += ((num[0] + num[1]) / 2) * num[2]
+        fx2_sum += ((num[0] + num[1]) / 2) * ((num[0] + num[1]) / 2) * num[2]
+    }
+
+    let n_2 = f_sum / 2
+
+
+    let mean = xf_sum / f_sum
+    let sd = Math.sqrt((fx2_sum / f_sum) - Math.pow(mean, 2))
+
+    return [
+        mean,
+        fx2_sum,
+        x_sum,
+        f_sum,
+        xf_sum,
+        sd
+    ]
+}
+
 export const getMissingFrequencyUsingMedianRange = (arr: number[][], median: number, h: number) => {
 
     let ans = 0;

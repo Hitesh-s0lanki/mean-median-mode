@@ -87,6 +87,7 @@ const MissingFrequency = () => {
       }
       setDataRow(temp);
     } else {
+      console.log("Hello");
       let temp: number[][] = [];
       setRange(Number.parseInt(values.range));
       let start = 0;
