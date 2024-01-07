@@ -41,8 +41,8 @@ const ResultTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {result.map((e) => (
-            <TableRow>
+          {result.map((e, index) => (
+            <TableRow key={`mean -${index}`}>
               <TableCell>
                 {e[0]}-{e[1]}
               </TableCell>
