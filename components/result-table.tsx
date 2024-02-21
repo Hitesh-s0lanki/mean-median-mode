@@ -22,9 +22,9 @@ const ResultTable = ({
   label?: string;
 }) => {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 w-full overflow-auto">
       <h1 className=" text-muted-foreground text-md">Output...</h1>
-      <Table className=" border-2">
+      <Table className="border-2">
         <TableCaption>{`the mean is ${data[0]} and Standard Deviation : ${data[5]}`}</TableCaption>
         <TableHeader>
           <TableRow>
@@ -38,6 +38,7 @@ const ResultTable = ({
               f<sub>i</sub>x<sub>i</sub>
               <sup>2</sup>
             </TableHead>
+            <TableHead>c-Frequency</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,6 +51,7 @@ const ResultTable = ({
               <TableCell>{e[3]}</TableCell>
               <TableCell>{e[4]}</TableCell>
               <TableCell>{e[5]}</TableCell>
+              <TableCell>{e[5]}</TableCell>
             </TableRow>
           ))}
           {data.length !== 0 && (
@@ -58,6 +60,7 @@ const ResultTable = ({
               <TableCell>{data[3]}</TableCell>
               <TableCell>{data[2]}</TableCell>
               <TableCell>{data[4]}</TableCell>
+              <TableCell>{data[1]}</TableCell>
               <TableCell>{data[1]}</TableCell>
             </TableRow>
           )}

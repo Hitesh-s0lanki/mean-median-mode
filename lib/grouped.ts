@@ -1,3 +1,51 @@
+import { mean_result } from "@/types/statistics";
+
+export const sumArray = (arr: number[]): number => {
+    return arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+}
+
+export const calculateMean = (dataRow: number, data: number, range: number, frequency: number[]): mean_result => {
+    const result_mean: mean_result = {
+        class: [],
+        frequency: [],
+        x: [],
+        x_f: [],
+        x_x_f: [],
+        x_mean_x: [],
+        f_x_mean_x: [],
+        mean: 0,
+        mean_deviation: 0,
+        standard_deviation: 0,
+        coeff_mean_deviation: 0,
+        coeff_standard_deviation: 0,
+    }
+
+    for (let row = 0; row < dataRow; row++) {
+        result_mean.class.push([data, data + range])
+        result_mean.frequency.push(frequency[row])
+        result_mean.x.push((data + data + range) / 2)
+        result_mean.x_f.push(((data + data + range) / 2) * frequency[row])
+        result_mean.x_x_f.push(Math.pow((data + data + range) / 2, 2) * frequency[row])
+        data = data + range
+    }
+
+    result_mean.mean = sumArray(result_mean.x_f) / sumArray(frequency)
+    result_mean.standard_deviation = Math.sqrt((sumArray(result_mean.x_x_f) / sumArray(frequency)) - Math.pow(result_mean.mean, 2))
+
+    for (let row = 0; row < dataRow; row++) {
+        result_mean.x_mean_x.push(Math.abs(result_mean.x[row] - result_mean.mean))
+        result_mean.f_x_mean_x.push(frequency[row] * Math.abs(result_mean.x[row] - result_mean.mean))
+    }
+
+    result_mean.mean_deviation = sumArray(result_mean.f_x_mean_x) / sumArray(frequency)
+
+    result_mean.coeff_mean_deviation = result_mean.mean_deviation / result_mean.mean
+    result_mean.coeff_standard_deviation = result_mean.standard_deviation / result_mean.mean
+
+    return result_mean
+}
+
+
 export const getMeanGroup = (arr: number[][]) => {
     let x_sum = 0;
     let f_sum = 0;
