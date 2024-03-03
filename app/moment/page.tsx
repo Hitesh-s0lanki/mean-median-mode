@@ -1,8 +1,6 @@
 "use client";
 
-import MeanResultTable from "@/components/mean-result-table";
-import MedianResultTable from "@/components/median-result-table";
-import ModeResultTable from "@/components/mode-result-table";
+import MomentResultTable from "@/components/moment-result-table";
 import RangeTable from "@/components/range-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { calculateMean, calculateMedian, calculateMode } from "@/lib/grouped";
-import { mean_result, median_result, mode_result } from "@/types/statistics";
+import { calculateMoment } from "@/lib/grouped";
+import { moment_group } from "@/types/statistics";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,14 +25,13 @@ const formSchema = z.object({
   dataCount: z.string().min(1, { message: "Row is required" }),
   ranged: z.boolean(),
   range: z.string(),
+  difference: z.string(),
 });
 
-const GroupMean = () => {
+const MomentPage = () => {
   const [data, setData] = useState<number>(0);
   const [frequency, setFrequency] = useState<number[]>([]);
-  const [result, setResult] = useState<mean_result | null>(null);
-  const [medianResult, setMedianResult] = useState<median_result | null>(null);
-  const [modeResult, setModeResult] = useState<mode_result | null>(null);
+  const [result, setResult] = useState<moment_group | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,13 +39,18 @@ const GroupMean = () => {
       dataCount: "",
       ranged: false,
       range: "0",
+      difference: "0",
     },
   });
 
   const [dataRow, setDataRow] = useState<number>(0);
   const [range, setRange] = useState(0);
+  const [difference, setDifference] = useState(0);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (values.difference) {
+      setDifference(Number.parseInt(values.difference));
+    }
     if (values.ranged) {
       let temp: number[] = [];
       for (let i = 0; i < Number.parseInt(values.dataCount); i++) {
@@ -61,15 +63,13 @@ const GroupMean = () => {
   };
 
   const calculate = () => {
-    setResult(calculateMean(dataRow, data, range, frequency));
-    setMedianResult(calculateMedian(dataRow, data, range, frequency));
-    setModeResult(calculateMode(dataRow, data, range, frequency));
+    setResult(calculateMoment(dataRow, data, range, frequency, difference));
   };
 
   return (
     <div className="h-full w-full flex flex-col p-5 gap-5 pb-20">
       <h1 className="text-xl text-muted-foreground">
-        Find the Mean,Median, Mode
+        Find the Moment, skewness, kurtosis
       </h1>
       <Form {...form}>
         <form
@@ -89,7 +89,27 @@ const GroupMean = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>Count of Data Row.</FormDescription>
+                <FormDescription>Number of Data Row.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="difference"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>Calculate the Moment About</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter the number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  If the moment is about mean set it to -1
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -131,14 +151,6 @@ const GroupMean = () => {
         </form>
       </Form>
 
-      {/* {dataRow.length !== 0 && range === 0 && (
-        <SimpleTable
-          dataRow={dataRow}
-          onChange={onChange}
-          calculate={calculate}
-          label="Fill Completely"
-        />
-      )} */}
       {dataRow !== 0 && range !== 0 && (
         <RangeTable
           frequency={frequency}
@@ -150,13 +162,10 @@ const GroupMean = () => {
           calculate={calculate}
         />
       )}
-      {result && <MeanResultTable result={result} dataRow={dataRow} />}
-      {medianResult && (
-        <MedianResultTable result={medianResult} dataRow={dataRow} />
-      )}
-      {modeResult && <ModeResultTable result={modeResult} dataRow={dataRow} />}
+
+      {result && <MomentResultTable result={result} dataRow={dataRow} />}
     </div>
   );
 };
 
-export default GroupMean;
+export default MomentPage;

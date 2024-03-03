@@ -22,6 +22,16 @@ const HomePage = () => {
           href=""
           description={"Provide the mean or median or mode"}
         />
+        <TopicCard
+          label={"Find the moment, skewness, kurtosis"}
+          href="/moment"
+          description={"For Group Data"}
+        />
+        <TopicCard
+          label={"Find the moment, skewness, kurtosis"}
+          href="/moment/ungroup"
+          description={"For UnGroup Data"}
+        />
       </div>
     </div>
   );
