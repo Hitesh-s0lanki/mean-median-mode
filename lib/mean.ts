@@ -126,7 +126,7 @@ export const calculateMomentUngroup = (data: number[], arr: number[], difference
 
     const frequency_sum = data.length
 
-    result_moment.standard_deviation = temp / frequency_sum
+    result_moment.standard_deviation = Number.parseFloat(Math.sqrt(temp / frequency_sum).toFixed(4))
 
     result_moment.first_moment = sumArray(result_moment.x_a) / frequency_sum
     result_moment.second_moment = sumArray(result_moment.x_a_2) / frequency_sum
