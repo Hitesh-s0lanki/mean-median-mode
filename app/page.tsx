@@ -2,11 +2,11 @@ import TopicCard from "@/components/topic-card";
 
 const HomePage = () => {
   return (
-    <div className="h-full w-full  p-2 flex flex-col gap-2">
-      <h1 className="w-full text-2xl font-semibold flex justify-center items-center">
+    <div className="h-full w-full  p-2 flex flex-col gap-2 px-6 py-12">
+      <h1 className="w-full font-semibold flex justify-center items-center text-2xl  text-center mb-12 text-gray-800">
         Statistics
       </h1>
-      <div className="grid grid-cols-2 p-2 gap-4">
+      <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <TopicCard
           label={"Mean, Median ,Mode"}
           description="UnGroup Data"

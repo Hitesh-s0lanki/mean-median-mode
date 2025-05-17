@@ -21,9 +21,9 @@ const TopicCard = ({ label, href, description }: TopicCardProps) => {
   return (
     <Card
       onClick={() => router.push(href)}
-      className="bg-amber-100 h-52 flex w-full justify-center items-center cursor-pointer shadow-lg drop-shadow-md"
-    >
-      <CardHeader className="w-full flex justify-center items-center">
+      className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-md
+                 transform transition-transform duration-300 hover:-translate-y-2 flex justify-center items-center ">
+      <CardHeader className="w-full flex justify-center items-center flex-col p-8">
         <CardTitle className="text-2xl text-center w-full flex justify-center items-center">
           {label}
         </CardTitle>

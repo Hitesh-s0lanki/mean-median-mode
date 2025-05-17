@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Statistics Dashboard
+
+A modern, responsive React/Next.js dashboard for computing descriptive statistics—Mean, Median, Mode, Missing Frequency, Moments, Skewness, and Kurtosis—with an engaging UI powered by Tailwind CSS and NextUI.
+
+## Demo
+
+> **Live Preview:** [Statistics Dashboard Demo](https://mean-median-mode-alpha.vercel.app/)
+
+![Statistics Dashboard Screenshot](./images/main.png)
+
+## Features
+
+- **Mean, Median, Mode** (Ungrouped & Grouped Data)
+- **Find Missing Frequency** given mean (μ), median (˜x), or mode
+- **Moments, Skewness, Kurtosis** (Ungrouped & Grouped Data)
+- **Responsive Grid** layout: 1–3 columns across mobile, tablet, desktop
+- **Hover Animations** & **Lift Effects** for tactile feedback
+- **Iconography** for quick visual scanning
+- **Light, Modern Design** with subtle gradients and shadows
+
+## Tech Stack
+
+- **Framework:** Next.js 14 / React 18
+- **Styling:** Tailwind CSS
+- **Components:** NextUI
+- **Icons:** react-icons (Feather)
+- **Deployment:** Vercel (recommended)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js v16 or higher
+- npm, yarn, or pnpm package manager
+
+### Installation
 
 ```bash
-npm run dev
+# Clone the repo
+git clone https://github.com/Hitesh-s0lanki/mean-median-mode
+cd statistics-dashboard
+
+# Install dependencies
+npm install
 # or
-yarn dev
+# yarn install
 # or
-pnpm dev
-# or
-bun dev
+# pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Start the development server
+npm run dev
+# or
+# yarn dev
+# or
+# pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Open your browser to [http://localhost:3000](http://localhost:3000) to see the dashboard.
 
-## Learn More
+### Production Build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Build for production
+npm run build
+npm start
+# or
+# yarn build && yarn start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Navigate to the **Statistics** page.
+2. Choose the statistic card you want (Mean/Median/Mode, Missing Frequency, Moments, etc.).
+3. Input your dataset (ungrouped raw values or grouped frequency table).
+4. View instant results and formulas.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Enjoy building with data?** ⭐️ If you find this project helpful, please give it a star on GitHub!
